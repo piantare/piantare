@@ -1,0 +1,26 @@
+{
+  "home": {
+    "title": "Piantare",
+    "subtitle": "Criar pontes para a longevidade.",
+    "designSystem": {
+      "title": "Design system — preview",
+      "description": "Primitivos Button / Input / Label / Card rodando em tokens placeholder. Paleta de marca pendente (ADR 0004).",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "voce@piantare.com",
+      "variants": {
+        "primary": "Primário",
+        "secondary": "Secundário",
+        "outline": "Outline",
+        "ghost": "Ghost",
+        "link": "Link",
+        "destructive": "Destrutivo"
+      },
+      "sizes": {
+        "small": "Pequeno",
+        "default": "Padrão",
+        "large": "Grande"
+      },
+      "footer": "Acesse {healthPath} para verificar a integração com o Supabase."
+    }
+  }
+}

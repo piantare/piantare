@@ -1,0 +1,178 @@
+# Piantare — Deploy guide (Step 9, MVP go-live)
+
+Target: take the First Live Loop (ADR 0006) from localhost to a public URL,
+usable by external users with no technical intervention. This document is
+operational — runbook + checklist, not architecture.
+
+The flow is **non-destructive and reversible**: nothing here drops data or
+overwrites existing infra. If a step fails, stop and reconcile before
+continuing.
+
+---
+
+## 0. Inputs required from owner
+
+Before any step below runs, the following must be provided / confirmed:
+
+| Input | Where to get | Notes |
+| --- | --- | --- |
+| Production Supabase project URL | Supabase dashboard → Project Settings → API | Same project as today (`ydmcyituvsjnfagxjgka`) OR a new one — decide once. |
+| Production Supabase anon key | same panel, "Project API keys → anon public" | Public, ships to the browser. |
+| Production Supabase service-role key | same panel, "Project API keys → service_role" | SENSITIVE, never client-side. |
+| GitHub repo URL | (push current worktree to a remote) | Needed for Vercel import. |
+| Vercel account access | manual login on vercel.com | Project creation is interactive. |
+| Production domain (temporary OK) | Vercel auto-provisions `<project>.vercel.app` | Capture this URL — Supabase Auth needs it. |
+
+If the Supabase project today is the same one we ship from, the migrations
+are already applied (Step 8 ran via MCP `apply_migration`). Otherwise the
+three migrations under `supabase/migrations/` must be applied in order.
+
+---
+
+## 1. Supabase production project
+
+### 1.1 Confirm or create the project
+
+- **If using the existing project** (`ydmcyituvsjnfagxjgka`):
+  - Verify in Studio that `organizations`, `memberships`, `products`,
+    `orders`, `invoices` exist and have RLS forced.
+  - Confirm the `auth.users` table contains only test data (this is now the
+    production source of truth — no further reset).
+
+- **If creating a new project**:
+  - Create via the Supabase dashboard.
+  - Apply migrations in order:
+    1. `supabase/migrations/0001_baseline.sql`
+    2. `supabase/migrations/20260518115920_rls_baseline.sql`
+    3. `supabase/migrations/20260518212431_step8_first_live_loop.sql`
+
+### 1.2 Auth settings (Supabase Studio → Authentication → Providers)
+
+- **Email** provider enabled.
+- **Confirm email**: decision required.
+  - `off` → signup logs the user in immediately. Faster smoke test, less
+    safe for public URL.
+  - `on` → signup requires inbox confirmation. Production-shaped, but the
+    smoke test needs a real mailbox.
+  - The code already handles both (`SignUpResult.needsConfirmation` toggles
+    the success message in `src/app/login/page.tsx`).
+- **Site URL**: set to the Vercel domain (e.g. `https://piantare-mvp.vercel.app`).
+- **Redirect URLs**: add the same Vercel domain.
+
+### 1.3 RLS smoke (do this BEFORE pointing real traffic)
+
+From Studio SQL editor, run:
+
+```sql
+-- Anonymous read of catalog: must return 0 rows.
+set role anon;
+select count(*) from public.organizations;
+reset role;
+```
+
+Expected: `0` (RLS denies anon read). If it returns rows, stop and
+investigate before deploying.
+
+---
+
+## 2. Repository — push to GitHub
+
+The worktree is on branch `claude/goofy-antonelli`. Before Vercel can
+import, the code must be on a remote.
+
+- Push the branch to GitHub (`gh repo create` if no remote exists yet).
+- Verify the build still passes locally first:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://placeholder.supabase.co \
+NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder \
+npx next build
+```
+
+Expected: 10 dynamic routes, no errors. (This is what Step 8 final check
+produced.)
+
+---
+
+## 3. Vercel project
+
+### 3.1 Import
+
+- vercel.com → "Add New… → Project" → import the GitHub repo.
+- Framework preset: Next.js (auto-detected).
+- Root directory: leave default.
+
+### 3.2 Environment variables
+
+Configure under **Project → Settings → Environment Variables**. Apply to
+all three environments (Production, Preview, Development) unless noted.
+
+| Name | Value | Scope | Sensitive |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | All | No |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key | All | No |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key | Production + Preview | **Yes** |
+
+Notes:
+
+- `NEXT_RUNTIME` is set automatically by Next; do not override.
+- The service-role key MUST be marked Sensitive. Our `services/supabase/admin.ts`
+  guards against edge runtime, but the project-wide ban on shipping the key
+  to the browser is non-negotiable.
+- Do NOT set the service-role key in the Development scope unless local
+  Vercel CLI development needs it. Local dev reads from `.env.local`.
+
+### 3.3 Build & deploy
+
+- Trigger the first deploy. Watch the build log.
+- Expected output: same shape as the local `next build` — 10 routes, no
+  errors.
+- If env var validation fails at boot (`src/config/env.ts`), the build will
+  error with the exact zod issue paths. Fix the env var, redeploy.
+
+### 3.4 First request
+
+- Visit the Vercel-provisioned URL.
+- `/` should redirect to `/login` (no session yet).
+- `/login` should render.
+
+If `/` returns a 500, hit `/_health` — it surfaces the underlying Supabase
+connection error.
+
+---
+
+## 4. Connect Auth redirects to the live domain
+
+Once the Vercel URL is known:
+
+- Supabase Studio → Authentication → URL Configuration:
+  - **Site URL** = `https://<vercel-domain>`
+  - **Redirect URLs** include the same.
+- Confirm email link clicks land on `/` (which routes correctly post-confirmation).
+
+---
+
+## 5. Seed the loop (production, via UI)
+
+See `docs/SMOKE_TEST.md` for the step-by-step. The deploy is "done" only
+once that document's checklist runs green end-to-end.
+
+---
+
+## Appendix A — Rollback
+
+- Vercel deploys are immutable; rolling back is one click in the
+  deployments tab.
+- Database changes from the smoke test are app data, not schema. If they
+  pollute the prod set, the relevant rows can be deleted from Studio:
+  `delete from public.invoices; delete from public.orders;
+  delete from public.products; delete from public.memberships;
+  delete from public.organizations;` (in that order, FK-safe). Schema
+  remains intact.
+
+## Appendix B — What is NOT in scope for Step 9
+
+Per the Step 9 directive: no new features, no architecture changes, no
+abstractions. Multi-membership, real billing, cancellation flows,
+permissions hardening, and the cannabis vertical all come AFTER the loop
+is validated in production.

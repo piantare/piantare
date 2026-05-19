@@ -1,0 +1,26 @@
+{
+  "home": {
+    "title": "Piantare",
+    "subtitle": "Building bridges to longevity.",
+    "designSystem": {
+      "title": "Design system — preview",
+      "description": "Button / Input / Label / Card primitives running on placeholder tokens. Brand palette pending (ADR 0004).",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@piantare.com",
+      "variants": {
+        "primary": "Primary",
+        "secondary": "Secondary",
+        "outline": "Outline",
+        "ghost": "Ghost",
+        "link": "Link",
+        "destructive": "Destructive"
+      },
+      "sizes": {
+        "small": "Small",
+        "default": "Default",
+        "large": "Large"
+      },
+      "footer": "Visit {healthPath} to verify the Supabase wiring."
+    }
+  }
+}
