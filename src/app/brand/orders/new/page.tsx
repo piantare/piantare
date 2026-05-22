@@ -1,20 +1,14 @@
 import { redirect } from "next/navigation";
 
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Input,
-  Label,
-} from "@/design-system";
+import { Card, CardContent, CardHeader, CardTitle } from "@/design-system";
 import { listActiveProductsForBrandCatalog } from "@/modules/products";
 import { createOrder } from "@/modules/orders";
 import { toProductId } from "@/domains/product";
 
 import { requireSession } from "@/app/_lib/gating";
 import { Shell } from "@/app/_lib/shell";
+
+import { OrderForm, type CatalogOption } from "./_order-form";
 
 type Search = { productId?: string; error?: string };
 
@@ -28,9 +22,10 @@ export default async function NewOrderPage({
     requiredKind: "brand",
   });
   const catalog = await listActiveProductsForBrandCatalog();
-  const selected = sp.productId
-    ? catalog.find((p) => p.id === sp.productId)
-    : null;
+  const defaultProductId =
+    sp.productId && catalog.some((p) => p.id === sp.productId)
+      ? sp.productId
+      : (catalog[0]?.id ?? "");
 
   async function createOrderAction(formData: FormData) {
     "use server";
@@ -58,6 +53,16 @@ export default async function NewOrderPage({
     redirect(`/orders/${orderId}`);
   }
 
+  // Project the catalog to the minimal shape the client component needs.
+  // We deliberately don't pass internal fields (timestamps, lab_id, etc).
+  const options: CatalogOption[] = catalog.map((p) => ({
+    id: p.id,
+    name: p.name,
+    unit: p.unit,
+    priceUsd: p.priceUsd,
+    labName: p.labName,
+  }));
+
   return (
     <Shell membership={membership} memberships={memberships}>
       <Card>
@@ -68,52 +73,11 @@ export default async function NewOrderPage({
           {sp.error && (
             <p className="mb-4 text-sm text-destructive">{sp.error}</p>
           )}
-          <form action={createOrderAction} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="productId">Produto</Label>
-              <select
-                id="productId"
-                name="productId"
-                defaultValue={selected?.id ?? ""}
-                required
-                className="h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-              >
-                <option value="" disabled>
-                  Selecione…
-                </option>
-                {catalog.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.labName} — {p.name} (US$ {p.priceUsd.toFixed(2)}/{p.unit})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="quantity">Quantidade</Label>
-                <Input
-                  id="quantity"
-                  name="quantity"
-                  type="number"
-                  min="1"
-                  step="1"
-                  defaultValue={1}
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="paymentTerms">Condições</Label>
-                <Input
-                  id="paymentTerms"
-                  name="paymentTerms"
-                  defaultValue="50/50"
-                />
-              </div>
-            </div>
-
-            <Button type="submit">Criar pedido</Button>
-          </form>
+          <OrderForm
+            catalog={options}
+            defaultProductId={defaultProductId}
+            action={createOrderAction}
+          />
         </CardContent>
       </Card>
     </Shell>

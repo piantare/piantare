@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
@@ -9,6 +8,7 @@ import {
   CardTitle,
   Input,
   Label,
+  SubmitButton,
 } from "@/design-system";
 import {
   getCurrentUser,
@@ -100,9 +100,9 @@ export default async function LoginPage({
                 minLength={6}
               />
             </div>
-            <Button type="submit">
+            <SubmitButton pendingLabel={isSignUp ? "Criando conta…" : "Entrando…"}>
               {isSignUp ? "Criar conta" : "Entrar"}
-            </Button>
+            </SubmitButton>
           </form>
           <p className="text-sm text-muted-foreground">
             {isSignUp ? "Já tem conta? " : "Novo aqui? "}
@@ -113,6 +113,14 @@ export default async function LoginPage({
               {isSignUp ? "Entrar" : "Criar conta"}
             </a>
           </p>
+          {!isSignUp && (
+            <p className="text-sm text-muted-foreground">
+              Esqueceu a senha?{" "}
+              <a className="underline" href="/forgot-password">
+                Recuperar acesso
+              </a>
+            </p>
+          )}
         </CardContent>
       </Card>
     </main>

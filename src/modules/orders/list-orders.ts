@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@/services/supabase/server";
 import type { OrganizationId } from "@/domains/organization";
 import type { Order } from "@/domains/order";
+import { getOrgNamesByIds } from "@/modules/organizations";
 
 import { rowToOrder } from "./create-order";
 
@@ -19,6 +20,11 @@ export type OrderListItem = Order & {
  * caller only sees orders for orgs they actually belong to. We additionally
  * filter by the requested org so a user with multiple memberships only sees
  * the inbox they asked for.
+ *
+ * **Cross-side org names:** the `organizations` RLS policy hides the
+ * counterparty's row, so we cannot use a PostgREST embed for `brand` / `lab`.
+ * Instead we collect the counterparty IDs from the RLS-filtered orders and
+ * resolve their names via `getOrgNamesByIds` (admin-scoped, display-only).
  */
 export async function listOrdersForOrg(
   orgId: OrganizationId,
@@ -31,9 +37,7 @@ export async function listOrdersForOrg(
       `
       id, brand_id, lab_id, product_id, quantity, unit_price_usd, total_usd,
       status, payment_terms, created_by, created_at, updated_at,
-      products:product_id(name),
-      brand:organizations!brand_id(name),
-      lab:organizations!lab_id(name)
+      products:product_id(name)
       `,
     )
     .or(`brand_id.eq.${orgId},lab_id.eq.${orgId}`)
@@ -41,10 +45,19 @@ export async function listOrdersForOrg(
 
   if (error) throw new Error(`listOrdersForOrg: ${error.message}`);
 
-  return (data ?? []).map((row) => ({
+  const rows = data ?? [];
+
+  // Resolve all referenced org names in one round trip.
+  const orgIds: string[] = [];
+  for (const row of rows) {
+    orgIds.push(row.brand_id, row.lab_id);
+  }
+  const orgNames = await getOrgNamesByIds(orgIds);
+
+  return rows.map((row) => ({
     ...rowToOrder(row),
     productName: row.products?.name ?? "",
-    brandName: row.brand?.name ?? "",
-    labName: row.lab?.name ?? "",
+    brandName: orgNames.get(row.brand_id as OrganizationId) ?? "",
+    labName: orgNames.get(row.lab_id as OrganizationId) ?? "",
   }));
 }

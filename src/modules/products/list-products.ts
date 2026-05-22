@@ -3,6 +3,7 @@ import "server-only";
 import { createClient } from "@/services/supabase/server";
 import type { OrganizationId } from "@/domains/organization";
 import type { Product } from "@/domains/product";
+import { getOrgNamesByIds } from "@/modules/organizations";
 
 import { rowToProduct } from "./create-product";
 
@@ -33,6 +34,9 @@ export type CatalogProduct = Product & { labName: string };
  * Brand-side catalog: every active product across every lab, with the lab
  * name joined for display. RLS gates by `products_select_for_brands`
  * (requires the caller to be a member of at least one brand org).
+ *
+ * Lab names resolved via `getOrgNamesByIds` because the `organizations` RLS
+ * hides labs the brand isn't a member of (see list-orders.ts comment).
  */
 export async function listActiveProductsForBrandCatalog(): Promise<
   CatalogProduct[]
@@ -42,15 +46,20 @@ export async function listActiveProductsForBrandCatalog(): Promise<
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id, lab_id, name, description, unit, price_usd, is_active, created_at, updated_at, organizations:lab_id(name)",
+      "id, lab_id, name, description, unit, price_usd, is_active, created_at, updated_at",
     )
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
-  if (error) throw new Error(`listActiveProductsForBrandCatalog: ${error.message}`);
+  if (error)
+    throw new Error(`listActiveProductsForBrandCatalog: ${error.message}`);
 
-  return (data ?? []).map((row) => ({
+  const rows = data ?? [];
+  const labIds = rows.map((row) => row.lab_id);
+  const orgNames = await getOrgNamesByIds(labIds);
+
+  return rows.map((row) => ({
     ...rowToProduct(row),
-    labName: row.organizations?.name ?? "",
+    labName: orgNames.get(row.lab_id as OrganizationId) ?? "",
   }));
 }

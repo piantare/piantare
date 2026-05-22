@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/design-system";
+import { Card, CardContent, CardHeader, CardTitle, SubmitButton } from "@/design-system";
 import { getOrderById, transitionOrderStatus } from "@/modules/orders";
 import {
   getInvoiceForOrder,
@@ -158,9 +158,9 @@ export default async function OrderDetailPage({
           {isLabSide && next ? (
             <form action={advanceAction}>
               <input type="hidden" name="nextStatus" value={next} />
-              <Button type="submit">
+              <SubmitButton pendingLabel="Avançando…">
                 Avançar para {STATUS_LABELS[next] ?? next}
-              </Button>
+              </SubmitButton>
             </form>
           ) : (
             <p className="text-xs text-muted-foreground">
@@ -190,9 +190,9 @@ export default async function OrderDetailPage({
               </p>
               {invoice.status === "pending" && (
                 <form action={markPaidAction}>
-                  <Button type="submit" variant="secondary">
+                  <SubmitButton pendingLabel="Confirmando…" variant="secondary">
                     Marcar como pago (mock)
-                  </Button>
+                  </SubmitButton>
                 </form>
               )}
             </>

@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   Input,
   Label,
+  SubmitButton,
 } from "@/design-system";
 import { createProduct } from "@/modules/products";
 
@@ -91,7 +91,7 @@ export default async function NewProductPage({
                 />
               </div>
             </div>
-            <Button type="submit">Criar produto</Button>
+            <SubmitButton pendingLabel="Criando produto…">Criar produto</SubmitButton>
           </form>
         </CardContent>
       </Card>

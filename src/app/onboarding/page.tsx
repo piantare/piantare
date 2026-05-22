@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
@@ -9,6 +8,7 @@ import {
   CardTitle,
   Input,
   Label,
+  SubmitButton,
 } from "@/design-system";
 import { createOrganization } from "@/modules/onboarding";
 import {
@@ -108,32 +108,26 @@ export default async function OnboardingPage({
               <Input id="name" name="name" required />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="country">País (ISO-2)</Label>
-                <Input
-                  id="country"
-                  name="country"
-                  defaultValue="BR"
-                  maxLength={2}
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="currency">Moeda</Label>
-                <select
-                  id="currency"
-                  name="currency"
-                  defaultValue="USD"
-                  className="h-9 rounded-md border border-input bg-transparent px-3 text-sm"
-                >
-                  <option value="USD">USD</option>
-                  <option value="BRL">BRL</option>
-                </select>
-              </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="country">País (ISO-2)</Label>
+              <Input
+                id="country"
+                name="country"
+                defaultValue="BR"
+                maxLength={2}
+                required
+              />
             </div>
+            {/*
+              Currency selector intentionally hidden — the MVP stores every
+              price in USD (products.price_usd, orders.unit_price_usd) so the
+              org-level currency would be decorative and confusing. The action
+              falls back to USD when the field is absent. Re-introduce when
+              multi-currency pricing is real. See backlog B3.
+            */}
+            <input type="hidden" name="currency" value="USD" />
 
-            <Button type="submit">Criar organização</Button>
+            <SubmitButton pendingLabel="Criando organização…">Criar organização</SubmitButton>
           </form>
         </CardContent>
       </Card>
