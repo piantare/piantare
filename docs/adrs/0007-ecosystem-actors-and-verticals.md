@@ -29,6 +29,23 @@ These constrain every later decision:
 6. **No premature complexity.** Each wave is incrementally commitable and does not force the next.
 7. **Patient has no direct login in this phase.** Patient acts via public link with signed token (read + upload), originated by an agente. No auth user is created for the patient.
 
+### 2a. Operational ergonomics — anti-enterprise principles (2026-05-22)
+
+The product must continue to feel like **"simple operational coordination"** and not **"heavy enterprise ERP"**. These six guardrails ratify the spirit of Waves B–E, added after Wave A landed:
+
+- **A1 — Human-in-the-loop is structural, not transitional.** The platform coordinates and records; the relationship stays human. Even when automations get added later, the relationship does not move into the platform in this phase.
+- **A2 — No premature automation.** Specifically excluded for now: real payment rails, internal messaging, intra-platform communication, deep financial automation. Mock + ledger + human action remain the default.
+- **A3 — Flow-oriented, not registration-oriented.** Tables and forms exist only insofar as they unblock a step in the core loop. We do not pre-cadastrar fields "for the future" — a field enters when the flow needs it, not before.
+- **A4 — The core loop is the primary metric.** Everything entering must strengthen `agente → cotação → documentação → pagamento → operação → entrega → liquidação`. Anything that does not is deferred.
+- **A5 — Validate operational ergonomics before expanding the domain.** Each wave is followed by a real-use checkpoint (manual pass, partner walkthrough, smoke run). We do not stack waves on top of unverified ones.
+- **A6 — Wave B is the next structural step, but not the next mandatory step.** We pace by sinal de uso real, not by waterfall plan. A wave only triggers when its predecessor has been operationally observed.
+
+Concrete consequences for Wave B planning:
+- The `people` form starts with the **minimum fields the agente needs to open a quote**: name + contact (one channel). Doctor, address, ID, etc. only enter when the gate that consumes them is being built.
+- The `agente` role enters at the membership layer only — no separate "Agente" page tree until a real flow demands it.
+- The public quote link is the simplest token-signed read+upload page possible. No client-side state, no SPA-feel, no chat.
+- Avaliação de Wave B é "um agente real consegue abrir e enviar uma cotação para um cliente real em menos de 2 minutos sem ajuda" — não checklist de campos.
+
 ## 3. Actors
 
 | Actor | Role | Today | Plugged in |
