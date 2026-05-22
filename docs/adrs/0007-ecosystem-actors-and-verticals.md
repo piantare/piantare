@@ -44,7 +44,15 @@ Concrete consequences for Wave B planning:
 - The `people` form starts with the **minimum fields the agente needs to open a quote**: name + contact (one channel). Doctor, address, ID, etc. only enter when the gate that consumes them is being built.
 - The `agente` role enters at the membership layer only — no separate "Agente" page tree until a real flow demands it.
 - The public quote link is the simplest token-signed read+upload page possible. No client-side state, no SPA-feel, no chat.
-- Avaliação de Wave B é "um agente real consegue abrir e enviar uma cotação para um cliente real em menos de 2 minutos sem ajuda" — não checklist de campos.
+- Avaliação de Wave B é "um agente real consegue abrir e enviar uma cotação para um cliente real em menos de 2 minutos sem ajuda" — não checklist de campos. Este é o **teste dos 2 minutos** e fica como filtro permanente: se um caminho não passa nele, voltamos ao desenho.
+
+### 2b. Linguagem interna (2026-05-22)
+
+Pequena nota de tom que afeta como pensamos a construção:
+
+- **Não usar "travado" / "trancado"** para descrever decisões ou alinhamentos. A palavra carrega rigidez incompatível com a forma incremental e adaptativa do projeto.
+- **Usar:** alinhado, registrado, consolidado, canonizado, definido, incorporado ao ADR, estabelecido como princípio, direcionado.
+- Decisões aqui são **incorporadas**, não imobilizadas. Tudo neste ADR pode ser revisado por sinal de uso real — ele é referência viva, não contrato.
 
 ## 3. Actors
 
