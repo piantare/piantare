@@ -17,7 +17,7 @@ export default async function BrandCatalogPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Catálogo</h1>
         <p className="text-sm text-muted-foreground">
-          Produtos ativos oferecidos pelos labs parceiros.
+          Produtos ativos oferecidos pelas indústrias parceiras.
         </p>
       </header>
 
@@ -34,7 +34,7 @@ export default async function BrandCatalogPage() {
               <CardHeader>
                 <CardTitle className="text-base">{p.name}</CardTitle>
                 <p className="text-xs text-muted-foreground">
-                  Lab: {p.labName}
+                  Indústria: {p.labName}
                 </p>
               </CardHeader>
               <CardContent className="flex flex-col gap-2 text-sm">

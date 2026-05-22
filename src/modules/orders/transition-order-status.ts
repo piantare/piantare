@@ -43,7 +43,7 @@ export async function transitionOrderStatus(
   if (loadError) throw new Error(`transitionOrderStatus: ${loadError.message}`);
   if (!current) throw new OrderNotFoundError();
 
-  // 2. Verify caller is a lab-side member of the lab on this order.
+  // 2. Verify caller is a member of the producing org (industria) on this order.
   const { data: membership, error: memberError } = await supabase
     .from("memberships")
     .select("org_kind")
@@ -54,7 +54,7 @@ export async function transitionOrderStatus(
   if (memberError) {
     throw new Error(`transitionOrderStatus: ${memberError.message}`);
   }
-  if (!membership || membership.org_kind !== "lab") {
+  if (!membership || membership.org_kind !== "industria") {
     throw new NotAMemberError();
   }
 

@@ -789,6 +789,7 @@ export type Database = {
           total_usd: number
           unit_price_usd: number
           updated_at: string
+          vertical: Database["public"]["Enums"]["vertical_kind"]
         }
         Insert: {
           brand_id: string
@@ -803,6 +804,7 @@ export type Database = {
           total_usd?: number
           unit_price_usd: number
           updated_at?: string
+          vertical?: Database["public"]["Enums"]["vertical_kind"]
         }
         Update: {
           brand_id?: string
@@ -817,6 +819,7 @@ export type Database = {
           total_usd?: number
           unit_price_usd?: number
           updated_at?: string
+          vertical?: Database["public"]["Enums"]["vertical_kind"]
         }
         Relationships: [
           {
@@ -866,6 +869,7 @@ export type Database = {
           name: string
           owner_id: string
           updated_at: string
+          vertical: Database["public"]["Enums"]["vertical_kind"]
         }
         Insert: {
           country: string
@@ -876,6 +880,7 @@ export type Database = {
           name: string
           owner_id: string
           updated_at?: string
+          vertical?: Database["public"]["Enums"]["vertical_kind"]
         }
         Update: {
           country?: string
@@ -886,6 +891,7 @@ export type Database = {
           name?: string
           owner_id?: string
           updated_at?: string
+          vertical?: Database["public"]["Enums"]["vertical_kind"]
         }
         Relationships: [
           {
@@ -1850,7 +1856,8 @@ export type Database = {
         | "in_production"
         | "ready"
         | "shipped"
-      organization_kind: "lab" | "brand"
+      organization_kind: "industria" | "brand"
+      vertical_kind: "cannabis_medicinal"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2004,7 +2011,8 @@ export const Constants = {
         "ready",
         "shipped",
       ],
-      organization_kind: ["lab", "brand"],
+      organization_kind: ["industria", "brand"],
+      vertical_kind: ["cannabis_medicinal"],
     },
   },
 } as const

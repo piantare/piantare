@@ -28,8 +28,8 @@ export async function getOrderById(id: OrderId): Promise<OrderDetail> {
     .from("orders")
     .select(
       `
-      id, brand_id, lab_id, product_id, quantity, unit_price_usd, total_usd,
-      status, payment_terms, created_by, created_at, updated_at,
+      id, vertical, brand_id, lab_id, product_id, quantity, unit_price_usd,
+      total_usd, status, payment_terms, created_by, created_at, updated_at,
       products:product_id(name, unit)
       `,
     )

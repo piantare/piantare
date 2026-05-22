@@ -23,7 +23,7 @@ export default async function NewProductPage({
 }) {
   const sp = await searchParams;
   const { user, membership, memberships } = await requireSession({
-    requiredKind: "lab",
+    requiredKind: "industria",
   });
 
   async function createProductAction(formData: FormData) {
@@ -44,10 +44,10 @@ export default async function NewProductPage({
       });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Erro desconhecido.";
-      redirect(`/lab/products/new?error=${encodeURIComponent(msg)}`);
+      redirect(`/industria/products/new?error=${encodeURIComponent(msg)}`);
     }
 
-    redirect("/lab/products");
+    redirect("/industria/products");
   }
 
   return (

@@ -1,7 +1,11 @@
 import "server-only";
 
 import { createAdminClient } from "@/services/supabase/admin";
-import { NotAMemberError, type OrganizationId } from "@/domains/organization";
+import {
+  NotAMemberError,
+  type OrganizationId,
+  type VerticalKind,
+} from "@/domains/organization";
 import { InactiveProductError, type ProductId } from "@/domains/product";
 import {
   toOrderId,
@@ -85,6 +89,7 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
 
 export function rowToOrder(row: {
   id: string;
+  vertical?: VerticalKind | null;
   brand_id: string;
   lab_id: string;
   product_id: string;
@@ -99,6 +104,9 @@ export function rowToOrder(row: {
 }): Order {
   return {
     id: toOrderId(row.id),
+    // Vertical defaults to cannabis_medicinal at the DB level (ADR 0007 Wave A).
+    // We accept null only for callers whose SELECT predates the column.
+    vertical: row.vertical ?? "cannabis_medicinal",
     brandId: row.brand_id as OrganizationId,
     labId: row.lab_id as OrganizationId,
     productId: row.product_id as ProductId,

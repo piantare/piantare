@@ -4,7 +4,10 @@
  * No backwards transitions. No cancel state yet.
  */
 
-import type { OrganizationId } from "@/domains/organization/types";
+import type {
+  OrganizationId,
+  VerticalKind,
+} from "@/domains/organization/types";
 import type { ProductId } from "@/domains/product/types";
 
 declare const orderIdBrand: unique symbol;
@@ -37,8 +40,17 @@ export function isOrderStatus(value: unknown): value is OrderStatus {
 export const INVOICE_STATUSES = ["pending", "paid"] as const;
 export type InvoiceStatus = (typeof INVOICE_STATUSES)[number];
 
+/**
+ * Order — domain representation.
+ *
+ * Naming note (ADR 0007 §12 Wave A): `labId` here denotes the producing
+ * org (now `kind = industria`). The physical column `orders.lab_id` and
+ * this field name `labId` are retained until Wave C generalizes to a
+ * buyer/seller model. Treat as legacy nomenclature, not literal "lab".
+ */
 export type Order = {
   id: OrderId;
+  vertical: VerticalKind;
   brandId: OrganizationId;
   labId: OrganizationId;
   productId: ProductId;

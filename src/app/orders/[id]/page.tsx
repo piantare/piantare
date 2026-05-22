@@ -42,7 +42,11 @@ export default async function OrderDetailPage({
   const order = await getOrderById(toOrderId(id));
   const invoice = await getInvoiceForOrder(order.id);
 
-  const isLabSide = membership.orgKind === "lab" && membership.organizationId === order.labId;
+  // "Lab side" in legacy naming = the producing org (industria). Kept this
+  // variable name until the column itself is renamed in Wave C.
+  const isLabSide =
+    membership.orgKind === "industria" &&
+    membership.organizationId === order.labId;
   const next = nextStatus(order.status);
 
   async function advanceAction(formData: FormData) {
@@ -105,7 +109,7 @@ export default async function OrderDetailPage({
           </div>
           <div>
             <div className="text-xs uppercase tracking-wide text-muted-foreground">
-              Lab
+              Indústria
             </div>
             <div>{order.labName}</div>
           </div>
@@ -168,7 +172,7 @@ export default async function OrderDetailPage({
                 ? "Pedido finalizado."
                 : isLabSide
                   ? ""
-                  : "Apenas o lab pode avançar o status."}
+                  : "Apenas a indústria pode avançar o status."}
             </p>
           )}
         </CardContent>
@@ -198,7 +202,8 @@ export default async function OrderDetailPage({
             </>
           ) : (
             <p className="text-xs text-muted-foreground">
-              A invoice é gerada automaticamente quando o lab aprovar o pedido.
+              A invoice é gerada automaticamente quando a indústria aprovar o
+              pedido.
             </p>
           )}
         </CardContent>

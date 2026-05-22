@@ -71,7 +71,7 @@ export default async function LoginPage({
           <CardTitle>{isSignUp ? "Criar conta" : "Entrar"}</CardTitle>
           <CardDescription>
             {isSignUp
-              ? "Crie sua conta para começar a configurar seu lab ou brand."
+              ? "Crie sua conta para começar a configurar sua indústria ou brand."
               : "Acesse sua conta Piantare."}
           </CardDescription>
         </CardHeader>

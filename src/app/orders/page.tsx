@@ -23,9 +23,9 @@ export default async function OrdersPage() {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">Pedidos</h1>
         <p className="text-sm text-muted-foreground">
-          {membership.orgKind === "lab"
-            ? "Pedidos recebidos pelo seu lab."
-            : "Seus pedidos junto aos labs."}
+          {membership.orgKind === "industria"
+            ? "Pedidos recebidos pela sua indústria."
+            : "Seus pedidos junto às indústrias."}
         </p>
       </header>
 
@@ -48,9 +48,9 @@ export default async function OrdersPage() {
                     </span>
                   </CardTitle>
                   <p className="text-xs text-muted-foreground">
-                    {membership.orgKind === "lab"
+                    {membership.orgKind === "industria"
                       ? `Brand: ${o.brandName}`
-                      : `Lab: ${o.labName}`}
+                      : `Indústria: ${o.labName}`}
                   </p>
                 </CardHeader>
                 <CardContent className="text-xs uppercase tracking-wide text-muted-foreground">

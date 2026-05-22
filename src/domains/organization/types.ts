@@ -4,8 +4,11 @@
  * No I/O, no Supabase types, no framework imports. This file is
  * importable from anywhere; mutations and persistence live in modules/.
  *
- * MVP scope (ADR 0006): two kinds (lab, brand); USD-only storage;
- * one organization per (user, kind).
+ * Scope (ADR 0007 Wave A): two kinds today (industria, brand);
+ * USD-only storage; one organization per (user, kind); every record
+ * tagged with a vertical (defaulted to cannabis_medicinal).
+ * Other actor kinds (escritorio, agente, farmacia_magistral, ...) and
+ * other verticals come in later waves.
  */
 
 declare const organizationIdBrand: unique symbol;
@@ -20,7 +23,7 @@ export function toMembershipId(value: string): MembershipId {
   return value as MembershipId;
 }
 
-export const ORGANIZATION_KINDS = ["lab", "brand"] as const;
+export const ORGANIZATION_KINDS = ["industria", "brand"] as const;
 export type OrganizationKind = (typeof ORGANIZATION_KINDS)[number];
 export function isOrganizationKind(value: unknown): value is OrganizationKind {
   return (
@@ -42,6 +45,21 @@ export function isOrgCurrency(value: unknown): value is OrgCurrency {
 }
 
 /**
+ * Verticals are operational ecosystems Piantare coordinates. ADR 0007 §11.
+ * Cannabis medicinal is the first; suplemento de longevidade, farmácia
+ * magistral standalone, exame diagnóstico and others will be added here
+ * as they are bootstrapped.
+ */
+export const VERTICAL_KINDS = ["cannabis_medicinal"] as const;
+export type VerticalKind = (typeof VERTICAL_KINDS)[number];
+export function isVerticalKind(value: unknown): value is VerticalKind {
+  return (
+    typeof value === "string" &&
+    (VERTICAL_KINDS as readonly string[]).includes(value)
+  );
+}
+
+/**
  * Organization — domain representation, decoupled from the DB row shape.
  *
  * `ownerId` is denormalized in storage; the source of truth for "who can
@@ -51,6 +69,7 @@ export function isOrgCurrency(value: unknown): value is OrgCurrency {
 export type Organization = {
   id: OrganizationId;
   kind: OrganizationKind;
+  vertical: VerticalKind;
   name: string;
   country: string; // ISO 3166-1 alpha-2
   currency: OrgCurrency;

@@ -6,9 +6,9 @@ import { listProductsByLab } from "@/modules/products";
 import { requireSession } from "@/app/_lib/gating";
 import { Shell } from "@/app/_lib/shell";
 
-export default async function LabProductsPage() {
+export default async function IndustriaProductsPage() {
   const { membership, memberships } = await requireSession({
-    requiredKind: "lab",
+    requiredKind: "industria",
   });
   const products = await listProductsByLab(membership.organizationId);
 
@@ -17,7 +17,7 @@ export default async function LabProductsPage() {
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Produtos</h1>
         <Button asChild>
-          <Link href="/lab/products/new">Novo produto</Link>
+          <Link href="/industria/products/new">Novo produto</Link>
         </Button>
       </header>
 

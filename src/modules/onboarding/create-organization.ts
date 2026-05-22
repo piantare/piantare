@@ -129,6 +129,9 @@ export async function createOrganization(
     organization: {
       id: toOrganizationId(orgRow.id),
       kind: orgRow.kind,
+      // Defaulted in DB to cannabis_medicinal (ADR 0007 Wave A). Reading via
+      // ?? to remain robust if a previous SELECT shape omits it.
+      vertical: orgRow.vertical ?? "cannabis_medicinal",
       name: orgRow.name,
       country: orgRow.country,
       currency: orgRow.currency as OrgCurrency,

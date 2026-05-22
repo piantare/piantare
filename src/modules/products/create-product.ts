@@ -36,7 +36,7 @@ export async function createProduct(
 
   const supabase = createAdminClient();
 
-  // Check membership in the target lab + ensure it is in fact a lab.
+  // Check membership in the target producing org + ensure it is an industria.
   const { data: membership, error: memberError } = await supabase
     .from("memberships")
     .select("org_kind")
@@ -47,7 +47,7 @@ export async function createProduct(
   if (memberError) {
     throw new Error(`createProduct: ${memberError.message}`);
   }
-  if (!membership || membership.org_kind !== "lab") {
+  if (!membership || membership.org_kind !== "industria") {
     throw new NotAMemberError();
   }
 

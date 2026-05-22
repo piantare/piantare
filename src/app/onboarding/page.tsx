@@ -44,7 +44,7 @@ export default async function OnboardingPage({
 
     if (!isOrganizationKind(kindRaw)) {
       redirect(
-        `/onboarding?error=${encodeURIComponent("Escolha lab ou brand.")}`,
+        `/onboarding?error=${encodeURIComponent("Escolha indústria ou brand.")}`,
       );
     }
     if (!isOrgCurrency(currencyRaw)) {
@@ -80,8 +80,8 @@ export default async function OnboardingPage({
         <CardHeader>
           <CardTitle>Criar sua organização</CardTitle>
           <CardDescription>
-            Você precisa de um lab (quem produz) ou um brand (quem encomenda)
-            para usar a plataforma. Pode trocar depois.
+            Você precisa de uma indústria (quem produz) ou um brand (quem
+            encomenda) para usar a plataforma. Pode trocar depois.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -93,8 +93,13 @@ export default async function OnboardingPage({
               <Label>Tipo de organização</Label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm">
-                  <input type="radio" name="kind" value="lab" defaultChecked />
-                  Lab (produção)
+                  <input
+                    type="radio"
+                    name="kind"
+                    value="industria"
+                    defaultChecked
+                  />
+                  Indústria (produção)
                 </label>
                 <label className="flex items-center gap-2 text-sm">
                   <input type="radio" name="kind" value="brand" />

@@ -14,7 +14,7 @@ export type ShellProps = {
 /**
  * Minimal app shell — header + content. Header surfaces:
  *   - current org name + kind
- *   - quick nav for the kind (lab → products; brand → catalog)
+ *   - quick nav for the kind (industria → products; brand → catalog)
  *   - orders inbox link (both sides)
  *   - logout button
  */
@@ -25,7 +25,9 @@ export function Shell({ membership, memberships, children }: ShellProps) {
     redirect("/login");
   }
 
-  const isLab = membership.orgKind === "lab";
+  const isIndustria = membership.orgKind === "industria";
+  // Display label is friendlier than the raw enum value.
+  const kindLabel = isIndustria ? "indústria" : membership.orgKind;
 
   return (
     <div className="flex min-h-full w-full flex-1 flex-col">
@@ -36,8 +38,8 @@ export function Shell({ membership, memberships, children }: ShellProps) {
               Piantare
             </Link>
             <nav className="flex items-center gap-4 text-sm">
-              {isLab ? (
-                <Link href="/lab/products" className="hover:underline">
+              {isIndustria ? (
+                <Link href="/industria/products" className="hover:underline">
                   Produtos
                 </Link>
               ) : (
@@ -54,7 +56,7 @@ export function Shell({ membership, memberships, children }: ShellProps) {
             <span className="text-muted-foreground">
               {membership.organizationName}{" "}
               <span className="text-xs uppercase tracking-wide">
-                ({membership.orgKind})
+                ({kindLabel})
               </span>
             </span>
             {memberships.length > 1 && (

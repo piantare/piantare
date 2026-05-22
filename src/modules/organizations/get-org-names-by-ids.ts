@@ -9,8 +9,8 @@ import { toOrganizationId, type OrganizationId } from "@/domains/organization";
  * **Why this exists:** the `organizations` RLS policy only lets a user read
  * rows for orgs they're a member of. PostgREST embedded reads inherit RLS, so
  * cross-side joins on `orders` (brand_id, lab_id) come back as `null` for the
- * counterparty — destroying the marketplace UX (brand can't see lab name,
- * lab can't see brand name).
+ * counterparty — destroying the marketplace UX (brand can't see the
+ * indústria name, indústria can't see brand name).
  *
  * **What this does:** uses the service-role client to fetch `(id, name)` pairs
  * for the given IDs. This is a *display-only* lookup — it never reads anything

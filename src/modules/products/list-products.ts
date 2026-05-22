@@ -8,8 +8,8 @@ import { getOrgNamesByIds } from "@/modules/organizations";
 import { rowToProduct } from "./create-product";
 
 /**
- * Lab-side: list all products of the lab the user belongs to.
- * RLS gates by `products_select_for_lab`.
+ * Producer-side: list all products of the indústria the user belongs to.
+ * RLS gates by `products_select_for_lab` (policy name kept until Wave C).
  */
 export async function listProductsByLab(
   labId: OrganizationId,
@@ -31,12 +31,14 @@ export async function listProductsByLab(
 export type CatalogProduct = Product & { labName: string };
 
 /**
- * Brand-side catalog: every active product across every lab, with the lab
- * name joined for display. RLS gates by `products_select_for_brands`
- * (requires the caller to be a member of at least one brand org).
+ * Brand-side catalog: every active product across every indústria, with the
+ * producing org name joined for display. RLS gates by
+ * `products_select_for_brands` (requires the caller to be a member of at
+ * least one brand org).
  *
- * Lab names resolved via `getOrgNamesByIds` because the `organizations` RLS
- * hides labs the brand isn't a member of (see list-orders.ts comment).
+ * Indústria names resolved via `getOrgNamesByIds` because the
+ * `organizations` RLS hides producing orgs the brand isn't a member of
+ * (see list-orders.ts comment).
  */
 export async function listActiveProductsForBrandCatalog(): Promise<
   CatalogProduct[]

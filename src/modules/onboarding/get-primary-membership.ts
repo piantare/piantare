@@ -5,10 +5,10 @@ import { getUserOrgs, type UserMembershipSummary } from "./get-user-orgs";
 /**
  * Returns the user's "primary" membership for auth gating purposes.
  *
- * MVP rule: one org per kind per user. If the user has both a lab and a
- * brand membership, we surface the most recently created one as the
+ * MVP rule: one org per kind per user. If the user has both an indústria
+ * and a brand membership, we surface the most recently created one as the
  * default landing context. The user can still navigate to the other side
- * explicitly via /lab/* or /brand/*.
+ * explicitly via /industria/* or /brand/*.
  */
 export async function getPrimaryMembership(
   userId: string,
