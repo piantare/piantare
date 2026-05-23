@@ -9,6 +9,7 @@ import { requireSession } from "@/app/_lib/gating";
  *   - No org → /onboarding
  *   - industria → /industria/products
  *   - brand → /brand/catalog
+ *   - escritorio → /escritorio (placeholder até C2/C3)
  *
  * Once we have a real dashboard this becomes its own page; for the MVP loop
  * the dashboard is just "where can this user act right now".
@@ -16,5 +17,6 @@ import { requireSession } from "@/app/_lib/gating";
 export default async function HomePage() {
   const { membership } = await requireSession();
   if (membership.orgKind === "industria") redirect("/industria/products");
+  if (membership.orgKind === "escritorio") redirect("/escritorio");
   redirect("/brand/catalog");
 }

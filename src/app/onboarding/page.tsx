@@ -44,7 +44,7 @@ export default async function OnboardingPage({
 
     if (!isOrganizationKind(kindRaw)) {
       redirect(
-        `/onboarding?error=${encodeURIComponent("Escolha indústria ou brand.")}`,
+        `/onboarding?error=${encodeURIComponent("Escolha indústria, brand ou escritório.")}`,
       );
     }
     if (!isOrgCurrency(currencyRaw)) {
@@ -81,8 +81,9 @@ export default async function OnboardingPage({
           Vamos abrir sua organização
         </h1>
         <p className="text-[14px] font-light leading-relaxed text-[var(--piantare-muted)]">
-          A Piantare coordena indústrias e brands na cadeia da longevidade.
-          Comece escolhendo qual lado você representa — pode trocar depois.
+          A Piantare coordena indústrias, brands e escritórios na cadeia da
+          longevidade. Comece escolhendo qual lado você representa — pode
+          trocar depois.
         </p>
       </header>
       <Card className="w-full">
@@ -93,21 +94,21 @@ export default async function OnboardingPage({
           <form action={createOrgAction} className="flex flex-col gap-5">
             <div className="flex flex-col gap-3">
               <Label>Tipo de organização</Label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <label className="group cursor-pointer">
                   <input
                     type="radio"
                     name="kind"
-                    value="industria"
+                    value="escritorio"
                     defaultChecked
                     className="peer sr-only"
                   />
                   <div className="flex h-full flex-col gap-1 rounded-xl border border-[var(--piantare-border)] bg-[var(--piantare-warm)] px-4 py-4 transition-all duration-200 ease-out peer-checked:border-[var(--piantare-gm)] peer-checked:bg-[var(--piantare-gl)] peer-checked:shadow-[var(--piantare-shadow-focus)] group-hover:-translate-y-[1px]">
                     <span className="text-[15px] font-normal text-foreground">
-                      Indústria
+                      Escritório
                     </span>
                     <span className="text-[12px] font-light text-[var(--piantare-muted)]">
-                      Quem produz
+                      Quem opera com agentes
                     </span>
                   </div>
                 </label>
@@ -123,7 +124,23 @@ export default async function OnboardingPage({
                       Brand
                     </span>
                     <span className="text-[12px] font-light text-[var(--piantare-muted)]">
-                      Quem encomenda
+                      Quem estrutura o produto
+                    </span>
+                  </div>
+                </label>
+                <label className="group cursor-pointer">
+                  <input
+                    type="radio"
+                    name="kind"
+                    value="industria"
+                    className="peer sr-only"
+                  />
+                  <div className="flex h-full flex-col gap-1 rounded-xl border border-[var(--piantare-border)] bg-[var(--piantare-warm)] px-4 py-4 transition-all duration-200 ease-out peer-checked:border-[var(--piantare-gm)] peer-checked:bg-[var(--piantare-gl)] peer-checked:shadow-[var(--piantare-shadow-focus)] group-hover:-translate-y-[1px]">
+                    <span className="text-[15px] font-normal text-foreground">
+                      Indústria
+                    </span>
+                    <span className="text-[12px] font-light text-[var(--piantare-muted)]">
+                      Quem produz
                     </span>
                   </div>
                 </label>

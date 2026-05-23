@@ -23,7 +23,19 @@ export function toMembershipId(value: string): MembershipId {
   return value as MembershipId;
 }
 
-export const ORGANIZATION_KINDS = ["industria", "brand"] as const;
+/**
+ * Organization kinds (ADR 0007 §3 + §2e fluxo comercial canônico).
+ *
+ * - `industria` — produz / fabrica white-label / private-label.
+ * - `brand` — detém o SKU comercial, opera via escritório.
+ * - `escritorio` — opera o dia a dia: importa, valida documentação,
+ *   libera despacho, é o centro operacional do MVP (§2c).
+ *
+ * Próximos kinds (Wave E+): `farmacia_magistral`, `laboratorio`,
+ * `clinica`. Entram quando o gate operacional que os consome estiver
+ * sendo construído (princípio A3).
+ */
+export const ORGANIZATION_KINDS = ["industria", "brand", "escritorio"] as const;
 export type OrganizationKind = (typeof ORGANIZATION_KINDS)[number];
 export function isOrganizationKind(value: unknown): value is OrganizationKind {
   return (

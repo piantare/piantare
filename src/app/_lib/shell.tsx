@@ -28,8 +28,22 @@ export function Shell({ membership, memberships, children }: ShellProps) {
     redirect("/login");
   }
 
-  const isIndustria = membership.orgKind === "industria";
-  const kindLabel = isIndustria ? "indústria" : membership.orgKind;
+  const kind = membership.orgKind;
+  // Display label is friendlier than the raw enum value.
+  const kindLabel =
+    kind === "industria"
+      ? "indústria"
+      : kind === "escritorio"
+        ? "escritório"
+        : kind;
+
+  // Nav primária por papel — onde a pessoa começa o dia.
+  const primaryNav: { href: string; label: string } =
+    kind === "industria"
+      ? { href: "/industria/products", label: "Produtos" }
+      : kind === "escritorio"
+        ? { href: "/escritorio", label: "Escritório" }
+        : { href: "/brand/catalog", label: "Catálogo" };
 
   return (
     <div className="flex min-h-full w-full flex-1 flex-col">
@@ -43,21 +57,12 @@ export function Shell({ membership, memberships, children }: ShellProps) {
               Piantare
             </Link>
             <nav className="flex items-center gap-6 text-[14px] font-light text-[var(--piantare-muted)]">
-              {isIndustria ? (
-                <Link
-                  href="/industria/products"
-                  className="transition-colors hover:text-foreground"
-                >
-                  Produtos
-                </Link>
-              ) : (
-                <Link
-                  href="/brand/catalog"
-                  className="transition-colors hover:text-foreground"
-                >
-                  Catálogo
-                </Link>
-              )}
+              <Link
+                href={primaryNav.href}
+                className="transition-colors hover:text-foreground"
+              >
+                {primaryNav.label}
+              </Link>
               <Link
                 href="/orders"
                 className="transition-colors hover:text-foreground"

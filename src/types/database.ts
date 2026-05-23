@@ -1927,7 +1927,7 @@ export type Database = {
         | "in_production"
         | "ready"
         | "shipped"
-      organization_kind: "industria" | "brand"
+      organization_kind: "industria" | "brand" | "escritorio"
       vertical_kind: "cannabis_medicinal"
     }
     CompositeTypes: {
@@ -2093,7 +2093,7 @@ export const Constants = {
         "ready",
         "shipped",
       ],
-      organization_kind: ["industria", "brand"],
+      organization_kind: ["industria", "brand", "escritorio"],
       vertical_kind: ["cannabis_medicinal"],
     },
   },
