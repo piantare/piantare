@@ -54,6 +54,64 @@ Pequena nota de tom que afeta como pensamos a construção:
 - **Usar:** alinhado, registrado, consolidado, canonizado, definido, incorporado ao ADR, estabelecido como princípio, direcionado.
 - Decisões aqui são **incorporadas**, não imobilizadas. Tudo neste ADR pode ser revisado por sinal de uso real — ele é referência viva, não contrato.
 
+### 2c. Atores prioritários — escritório e agente são a ponta viva (2026-05-23)
+
+Dos 5 atores comerciais (indústria, marca, escritório, agente, paciente), **escritório e agente são prioridade absoluta de ergonomia**. Indústria e marca existem porque sustentam o ecossistema, mas quem opera o dia a dia é o escritório com seus agentes.
+
+Consequências práticas:
+
+- Toda decisão de Wave B–E carrega o filtro: **"isso facilita um escritório ou um agente operando agora?"** Se a resposta é "isso ajuda só a indústria ou só a marca", desce na fila.
+- O **agente não pode sentir que está preenchendo ERP**. Tem que sentir que está conduzindo uma relação: menos densidade, menos tabelão, menos linguagem operacional fria — mais contexto, clareza, fluxo, continuidade, histórico vivo, sensação de acompanhamento. Mesmo quando houver complexidade regulatória.
+- O **escritório é o centro operacional do MVP**. Catálogo, validações documentais, liberação de despacho, conciliação — tudo passa por ele.
+- Indústria e marca ganham UI suficiente para o ecossistema sustentar a operação do escritório/agente, sem mais.
+
+### 2d. Paciente sem login (2026-05-23)
+
+Reafirma e detalha o princípio #7. O paciente:
+
+- **Não tem login.** Não nesta fase, não como primeiro fluxo.
+- Participa via **link público com token assinado** em quatro momentos: orçamento, upload documental, pagamento, assinatura, acompanhamento.
+- O token tem expiração curta no orçamento (60 min) e mais longa no link de pagamento (72h) — sem tornar a plataforma um portal.
+- **Não construir portal de paciente.** Cada vez que pensarmos "vamos dar uma área pro paciente", o reflexo é: "não, isso é uma tela pública de uma ação específica".
+
+Razão estrutural: a longitudinalidade da `person` (princípio #3) é registrada **pelo agente**, não pelo paciente. O paciente é sujeito, não usuário. Quando virar usuário, é decisão deliberada, não emergente.
+
+### 2e. Fluxo comercial canônico (2026-05-23)
+
+O fluxo de transação no ecossistema Piantare é unidirecional:
+
+```
+Indústria → Marca → Escritório → Agente → Paciente
+   (produz)  (estrutura) (opera)   (vende)  (consome)
+```
+
+Significados estruturais:
+
+- **Marca compra da indústria.** Pedido `seller=indústria, buyer=marca`.
+- **Escritório opera ou consigna da marca.** Pedido `seller=marca, buyer=escritório`.
+- **Agente representa o escritório** ao paciente. Agente é membership do escritório, não um elo comercial próprio.
+- **Paciente compra do escritório** (via agente). Pedido `seller=escritório, buyer=paciente` (modelado como `for_person_id`, sem buyer org).
+
+Esses pares (seller, buyer) definem o modelo de `partnerships` em Wave C: cada link `actor_links` é um vínculo entre seller-org e buyer-org com `supply_model` (purchase | consignment | dropship). Catálogo (`catalog_listings`) é publicado por um seller para um buyer (ou para qualquer um vinculado), seguindo a regra RN-009 do doc canônico (visibilidade em camadas).
+
+### 2f. Arquitetura pronta, dinheiro ainda não (2026-05-23)
+
+Princípio operacional que substitui as ambições financeiras do doc canônico (RN-012, RN-013) **na ordem de execução, sem reduzir o destino final**:
+
+- A **estrutura toda** existe desde já: `order_payouts` ledger, `commission_rules`, `billing_cycles` schema, `fx_rates` schema, `payment_gateway` enum, `consignment_balances`, splits por evento, statuses.
+- O **dinheiro não se move**. Splits vão para `status = pending` indefinidamente. Billing fica como projeção em `billing_cycles` sem cobrança. Stripe Connect / PagarMe / 1% Piantare entram **sob sinal explícito de demanda**, não no MVP.
+- **Por quê:** o ledger sem dinheiro já entrega 80% do valor — visibilidade operacional pro escritório, sensação de carteira pro agente, transparência. Construir os 20% finais (gateway real, conciliação, inadimplência, suspensão automática) é o trabalho mais caro e o último gating de demanda.
+- **Multi-currency:** `preferred_currency` por org + `fx_rate` snapshot existem desde já. AwesomeAPI não — quando precisar, a taxa entra **manualmente** no momento da liquidação. Estrutura preparada, automação deferida.
+
+### 2g. Onboarding active direto, integrações humanas (2026-05-23)
+
+Duas decisões operacionais para a Sprint 1A:
+
+- **Signup vira `active` direto.** Sem `pending_docs`, sem `pending_approval`, sem fila admin. O documento canônico (RN-001) descreve a forma final; nesta fase qualquer signup é imediatamente operável. O admin Piantare entra observando, auditando, ajudando onboarding manualmente, corrigindo exceções — governança pesada vem com volume.
+- **Integrações externas ficam fora.** Anvisa, Docusign, Mile, WhatsApp Business — **tudo humano nesta fase**. O escritório anexa o PDF da autorização ANVISA manualmente. O agente envia o link de cotação por WhatsApp pessoal (copy-paste do link público). O escritório cola o tracking number do despacho. A plataforma registra, não automatiza. Os **campos, estados e attachments nascem prontos** para receber automação depois.
+
+Isso não é "menos produto" — é **mais operação real, menos integração frágil**. Cada integração adicionada antes de demanda gera dependência e ponto de falha. Cada integração adicionada sob demanda real entrega valor proporcional ao esforço.
+
 ## 3. Actors
 
 | Actor | Role | Today | Plugged in |
