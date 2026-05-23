@@ -3,8 +3,11 @@ import * as React from "react";
 import { cn } from "@/lib/cn";
 
 /**
- * Card — presentational primitive.
- * Adapted from shadcn/ui. No client behavior.
+ * Card — primitivo apresentacional.
+ *
+ * Tom Piantare: fundo warm, borda verde translúcida, hover suave
+ * (translateY -2px + sombra verde leve). CardTitle em Cormorant
+ * Garamond para sensação editorial.
  */
 
 const Card = React.forwardRef<
@@ -14,7 +17,12 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "rounded-2xl border bg-card text-card-foreground",
+      "border-[var(--piantare-border)]",
+      "transition-[transform,box-shadow,border-color] duration-250 ease-out",
+      "hover:border-[var(--piantare-gx)]",
+      "hover:-translate-y-[1px]",
+      "hover:shadow-[var(--piantare-shadow)]",
       className,
     )}
     {...props}
@@ -28,12 +36,17 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("flex flex-col gap-2 p-7 pb-3", className)}
     {...props}
   />
 ));
 CardHeader.displayName = "CardHeader";
 
+/**
+ * CardTitle usa Cormorant Garamond — tom editorial calmo. Tamanho
+ * intencionalmente maior que o anterior (lg → xl/2xl) para hierarquia
+ * tranquila sem peso.
+ */
 const CardTitle = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -41,7 +54,7 @@ const CardTitle = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
+      "font-serif text-2xl font-normal leading-tight tracking-tight",
       className,
     )}
     {...props}
@@ -55,7 +68,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-[14px] font-light leading-relaxed text-muted-foreground", className)}
     {...props}
   />
 ));
@@ -65,7 +78,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div ref={ref} className={cn("p-7 pt-4", className)} {...props} />
 ));
 CardContent.displayName = "CardContent";
 
@@ -75,7 +88,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
+    className={cn("flex items-center p-7 pt-4", className)}
     {...props}
   />
 ));

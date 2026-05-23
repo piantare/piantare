@@ -59,17 +59,19 @@ export default async function ResetPasswordPage({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Definir nova senha</CardTitle>
-          <CardDescription>
-            Escolha uma senha de pelo menos 6 caracteres.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {sp.error && <p className="text-sm text-destructive">{sp.error}</p>}
-          <form action={updatePasswordAction} className="flex flex-col gap-4">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-10 px-6 py-16">
+      <header className="flex flex-col items-center gap-3 text-center">
+        <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+          Nova senha
+        </h1>
+        <p className="text-[14px] font-light leading-relaxed text-[var(--piantare-muted)]">
+          Pelo menos 6 caracteres. Depois disso, te levamos direto pra dentro.
+        </p>
+      </header>
+      <Card className="w-full">
+        <CardContent className="flex flex-col gap-5 p-7">
+          {sp.error && <p className="text-[13px] text-destructive">{sp.error}</p>}
+          <form action={updatePasswordAction} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <Label htmlFor="password">Nova senha</Label>
               <Input
@@ -90,7 +92,9 @@ export default async function ResetPasswordPage({
                 minLength={6}
               />
             </div>
-            <SubmitButton pendingLabel="Salvando…">Salvar nova senha</SubmitButton>
+            <SubmitButton pendingLabel="Salvando…" className="mt-2 w-full">
+              Salvar nova senha
+            </SubmitButton>
           </form>
         </CardContent>
       </Card>

@@ -65,8 +65,16 @@ export default async function LoginPage({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-8">
-      <Card>
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-10 px-6 py-16">
+      <header className="flex flex-col items-center gap-3 text-center">
+        <h1 className="font-serif text-[44px] font-light leading-none tracking-tight">
+          Piantare
+        </h1>
+        <p className="text-[13px] font-light italic text-[var(--piantare-muted)]">
+          Criar pontes para a longevidade.
+        </p>
+      </header>
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>{isSignUp ? "Criar conta" : "Entrar"}</CardTitle>
           <CardDescription>
@@ -75,16 +83,16 @@ export default async function LoginPage({
               : "Acesse sua conta Piantare."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-5">
           {sp.error && (
-            <p className="text-sm text-destructive">{sp.error}</p>
+            <p className="text-[13px] text-destructive">{sp.error}</p>
           )}
           {sp.info && (
-            <p className="text-sm text-muted-foreground">{sp.info}</p>
+            <p className="text-[13px] text-muted-foreground">{sp.info}</p>
           )}
           <form
             action={isSignUp ? signUpAction : signInAction}
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-5"
           >
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
@@ -100,27 +108,35 @@ export default async function LoginPage({
                 minLength={6}
               />
             </div>
-            <SubmitButton pendingLabel={isSignUp ? "Criando conta…" : "Entrando…"}>
+            <SubmitButton
+              pendingLabel={isSignUp ? "Criando conta…" : "Entrando…"}
+              className="mt-2 w-full"
+            >
               {isSignUp ? "Criar conta" : "Entrar"}
             </SubmitButton>
           </form>
-          <p className="text-sm text-muted-foreground">
-            {isSignUp ? "Já tem conta? " : "Novo aqui? "}
-            <a
-              className="underline"
-              href={isSignUp ? "/login" : "/login?mode=signup"}
-            >
-              {isSignUp ? "Entrar" : "Criar conta"}
-            </a>
-          </p>
-          {!isSignUp && (
-            <p className="text-sm text-muted-foreground">
-              Esqueceu a senha?{" "}
-              <a className="underline" href="/forgot-password">
-                Recuperar acesso
+          <div className="flex flex-col gap-2 pt-2 text-[13px] font-light text-[var(--piantare-muted)]">
+            <p>
+              {isSignUp ? "Já tem conta? " : "Novo aqui? "}
+              <a
+                className="text-[var(--piantare-gm)] underline-offset-4 hover:underline"
+                href={isSignUp ? "/login" : "/login?mode=signup"}
+              >
+                {isSignUp ? "Entrar" : "Criar conta"}
               </a>
             </p>
-          )}
+            {!isSignUp && (
+              <p>
+                Esqueceu a senha?{" "}
+                <a
+                  className="text-[var(--piantare-gm)] underline-offset-4 hover:underline"
+                  href="/forgot-password"
+                >
+                  Recuperar acesso
+                </a>
+              </p>
+            )}
+          </div>
         </CardContent>
       </Card>
     </main>

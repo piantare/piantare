@@ -60,29 +60,36 @@ export default async function ForgotPasswordPage({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 p-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Recuperar senha</CardTitle>
-          <CardDescription>
-            Enviaremos um link para você redefinir sua senha.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {sp.error && <p className="text-sm text-destructive">{sp.error}</p>}
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-10 px-6 py-16">
+      <header className="flex flex-col items-center gap-3 text-center">
+        <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+          Recuperar acesso
+        </h1>
+        <p className="text-[14px] font-light leading-relaxed text-[var(--piantare-muted)]">
+          Enviaremos um link calmo para você redefinir sua senha.
+        </p>
+      </header>
+      <Card className="w-full">
+        <CardContent className="flex flex-col gap-5 p-7">
+          {sp.error && <p className="text-[13px] text-destructive">{sp.error}</p>}
           {sp.info && (
-            <p className="text-sm text-muted-foreground">{sp.info}</p>
+            <p className="text-[13px] text-muted-foreground">{sp.info}</p>
           )}
-          <form action={sendResetAction} className="flex flex-col gap-4">
+          <form action={sendResetAction} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" required />
             </div>
-            <SubmitButton pendingLabel="Enviando…">Enviar link de recuperação</SubmitButton>
+            <SubmitButton pendingLabel="Enviando…" className="mt-2 w-full">
+              Enviar link de recuperação
+            </SubmitButton>
           </form>
-          <p className="text-sm text-muted-foreground">
+          <p className="pt-2 text-[13px] font-light text-[var(--piantare-muted)]">
             Lembrou da senha?{" "}
-            <a className="underline" href="/login">
+            <a
+              className="text-[var(--piantare-gm)] underline-offset-4 hover:underline"
+              href="/login"
+            >
               Entrar
             </a>
           </p>

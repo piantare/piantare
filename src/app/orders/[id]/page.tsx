@@ -85,74 +85,91 @@ export default async function OrderDetailPage({
 
   return (
     <Shell membership={membership} memberships={memberships}>
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Pedido #{order.id.slice(0, 8)}
+      <header className="flex flex-col gap-2">
+        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
+          Pedido · {order.id.slice(0, 8)}
+        </p>
+        <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+          {order.productName}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          {order.productName} · {order.quantity}× {order.productUnit}
+        <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+          {order.quantity}× {order.productUnit} · US$ {order.totalUsd.toFixed(2)}
         </p>
       </header>
 
-      {sp.error && <p className="text-sm text-destructive">{sp.error}</p>}
+      {sp.error && <p className="text-[13px] text-destructive">{sp.error}</p>}
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Detalhes</CardTitle>
+          <CardTitle className="text-[22px]">Detalhes</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-3 text-sm sm:grid-cols-2">
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+        <CardContent className="grid gap-5 sm:grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
               Brand
             </div>
-            <div>{order.brandName}</div>
+            <div className="text-[15px] text-foreground">{order.brandName}</div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="flex flex-col gap-1">
+            <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
               Indústria
             </div>
-            <div>{order.labName}</div>
+            <div className="text-[15px] text-foreground">{order.labName}</div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="flex flex-col gap-1">
+            <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
               Preço unitário
             </div>
-            <div className="font-mono">US$ {order.unitPriceUsd.toFixed(2)}</div>
+            <div className="tabular-nums text-[15px] text-foreground">
+              US$ {order.unitPriceUsd.toFixed(2)}
+            </div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="flex flex-col gap-1">
+            <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
               Total
             </div>
-            <div className="font-mono">US$ {order.totalUsd.toFixed(2)}</div>
-          </div>
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
-              Condições
+            <div className="tabular-nums text-[15px] text-foreground">
+              US$ {order.totalUsd.toFixed(2)}
             </div>
-            <div>{order.paymentTerms}</div>
           </div>
-          <div>
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+          <div className="flex flex-col gap-1">
+            <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
+              Condições de pagamento
+            </div>
+            <div className="text-[15px] text-foreground">{order.paymentTerms}</div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
               Status
             </div>
-            <div>{STATUS_LABELS[order.status] ?? order.status}</div>
+            <div className="text-[15px] text-foreground">
+              {STATUS_LABELS[order.status] ?? order.status}
+            </div>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Fluxo</CardTitle>
+          <CardTitle className="text-[22px]">Fluxo</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3 text-sm">
-          <ol className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-wide">
+        <CardContent className="flex flex-col gap-5">
+          <ol className="flex flex-wrap items-center gap-2">
             {ORDER_STATUSES.map((s, idx) => {
               const currentIdx = ORDER_STATUSES.indexOf(order.status);
               const reached = idx <= currentIdx;
+              const isCurrent = idx === currentIdx;
               return (
                 <li
                   key={s}
-                  className={`rounded px-2 py-1 ${reached ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                  className={[
+                    "inline-flex items-center rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.14em] transition-colors",
+                    isCurrent
+                      ? "bg-[var(--piantare-gd)] text-[var(--piantare-white)]"
+                      : reached
+                        ? "border border-[var(--piantare-gx)] bg-[var(--piantare-gl)] text-[var(--piantare-gd)]"
+                        : "border border-[var(--piantare-border)] bg-transparent text-[var(--piantare-dim)]",
+                  ].join(" ")}
                 >
                   {STATUS_LABELS[s] ?? s}
                 </li>
@@ -167,7 +184,7 @@ export default async function OrderDetailPage({
               </SubmitButton>
             </form>
           ) : (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[13px] font-light text-[var(--piantare-muted)]">
               {next === null
                 ? "Pedido finalizado."
                 : isLabSide
@@ -180,28 +197,39 @@ export default async function OrderDetailPage({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Cobrança</CardTitle>
+          <CardTitle className="text-[22px]">Cobrança</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3 text-sm">
+        <CardContent className="flex flex-col gap-4">
           {invoice ? (
             <>
-              <p>
-                Invoice <span className="font-mono">{invoice.id.slice(0, 8)}</span>{" "}
-                · US$ {invoice.amountUsd.toFixed(2)}{" "}
-                <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {invoice.status === "paid" ? "pago" : "pendente"}
+              <div className="flex flex-wrap items-baseline gap-3">
+                <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--piantare-muted)]">
+                  Invoice · {invoice.id.slice(0, 8)}
+                </p>
+                <p className="tabular-nums text-[18px] text-foreground">
+                  US$ {invoice.amountUsd.toFixed(2)}
+                </p>
+                <span
+                  className={[
+                    "inline-flex items-center rounded-full px-3 py-1 text-[10px] font-medium uppercase tracking-[0.14em]",
+                    invoice.status === "paid"
+                      ? "bg-[var(--piantare-gd)] text-[var(--piantare-white)]"
+                      : "border border-[var(--piantare-gx)] bg-[var(--piantare-gl)] text-[var(--piantare-gd)]",
+                  ].join(" ")}
+                >
+                  {invoice.status === "paid" ? "Pago" : "Pendente"}
                 </span>
-              </p>
+              </div>
               {invoice.status === "pending" && (
                 <form action={markPaidAction}>
-                  <SubmitButton pendingLabel="Confirmando…" variant="secondary">
+                  <SubmitButton pendingLabel="Confirmando…" variant="outline">
                     Marcar como pago (mock)
                   </SubmitButton>
                 </form>
               )}
             </>
           ) : (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[13px] font-light text-[var(--piantare-muted)]">
               A invoice é gerada automaticamente quando a indústria aprovar o
               pedido.
             </p>

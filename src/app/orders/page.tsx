@@ -17,13 +17,16 @@ const STATUS_LABELS: Record<string, string> = {
 export default async function OrdersPage() {
   const { membership, memberships } = await requireSession();
   const orders = await listOrdersForOrg(membership.organizationId);
+  const isIndustria = membership.orgKind === "industria";
 
   return (
     <Shell membership={membership} memberships={memberships}>
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Pedidos</h1>
-        <p className="text-sm text-muted-foreground">
-          {membership.orgKind === "industria"
+      <header className="flex flex-col gap-2">
+        <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+          Pedidos
+        </h1>
+        <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+          {isIndustria
             ? "Pedidos recebidos pela sua indústria."
             : "Seus pedidos junto às indústrias."}
         </p>
@@ -31,30 +34,39 @@ export default async function OrdersPage() {
 
       {orders.length === 0 ? (
         <Card>
-          <CardContent className="p-6 text-sm text-muted-foreground">
-            Nenhum pedido ainda.
+          <CardContent className="flex flex-col gap-2 p-10 text-center">
+            <p className="font-serif text-2xl font-light text-foreground">
+              Nenhum pedido ainda.
+            </p>
+            <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+              {isIndustria
+                ? "Quando um brand abrir um pedido para sua indústria, aparece aqui."
+                : "Quando você abrir o primeiro pedido, aparece aqui."}
+            </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           {orders.map((o) => (
             <Link key={o.id} href={`/orders/${o.id}`} className="block">
-              <Card className="hover:bg-accent/40">
-                <CardHeader>
-                  <CardTitle className="text-base">
-                    {o.productName}{" "}
-                    <span className="text-xs font-normal text-muted-foreground">
-                      · {o.quantity}× · US$ {o.totalUsd.toFixed(2)}
-                    </span>
-                  </CardTitle>
-                  <p className="text-xs text-muted-foreground">
-                    {membership.orgKind === "industria"
-                      ? `Brand: ${o.brandName}`
-                      : `Indústria: ${o.labName}`}
-                  </p>
+              <Card>
+                <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3">
+                  <div className="flex flex-col gap-1">
+                    <CardTitle className="text-[20px]">
+                      {o.productName}
+                    </CardTitle>
+                    <p className="text-[13px] font-light text-[var(--piantare-muted)]">
+                      {isIndustria ? `Brand · ${o.brandName}` : `Indústria · ${o.labName}`}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center rounded-full border border-[var(--piantare-gx)] bg-[var(--piantare-gl)] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--piantare-gd)]">
+                    {STATUS_LABELS[o.status] ?? o.status}
+                  </span>
                 </CardHeader>
-                <CardContent className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {STATUS_LABELS[o.status] ?? o.status}
+                <CardContent className="flex items-baseline gap-4 pt-0 text-[14px] font-light text-[var(--piantare-muted)]">
+                  <span className="tabular-nums">
+                    {o.quantity}× · US$ {o.totalUsd.toFixed(2)}
+                  </span>
                 </CardContent>
               </Card>
             </Link>

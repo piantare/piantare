@@ -17,6 +17,9 @@ export type ShellProps = {
  *   - quick nav for the kind (industria → products; brand → catalog)
  *   - orders inbox link (both sides)
  *   - logout button
+ *
+ * Visual: backdrop blur leve sobre fundo warm + divisor verde
+ * translúcido. Wordmark em Cormorant para tom editorial.
  */
 export function Shell({ membership, memberships, children }: ShellProps) {
   async function logoutAction() {
@@ -26,41 +29,52 @@ export function Shell({ membership, memberships, children }: ShellProps) {
   }
 
   const isIndustria = membership.orgKind === "industria";
-  // Display label is friendlier than the raw enum value.
   const kindLabel = isIndustria ? "indústria" : membership.orgKind;
 
   return (
     <div className="flex min-h-full w-full flex-1 flex-col">
-      <header className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 p-4">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="font-semibold tracking-tight">
+      <header className="sticky top-0 z-30 border-b border-[var(--piantare-border)] bg-[rgba(250,252,251,0.92)] backdrop-blur-md">
+        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
+          <div className="flex items-center gap-8">
+            <Link
+              href="/"
+              className="font-serif text-[22px] font-normal tracking-tight text-foreground transition-opacity hover:opacity-75"
+            >
               Piantare
             </Link>
-            <nav className="flex items-center gap-4 text-sm">
+            <nav className="flex items-center gap-6 text-[14px] font-light text-[var(--piantare-muted)]">
               {isIndustria ? (
-                <Link href="/industria/products" className="hover:underline">
+                <Link
+                  href="/industria/products"
+                  className="transition-colors hover:text-foreground"
+                >
                   Produtos
                 </Link>
               ) : (
-                <Link href="/brand/catalog" className="hover:underline">
+                <Link
+                  href="/brand/catalog"
+                  className="transition-colors hover:text-foreground"
+                >
                   Catálogo
                 </Link>
               )}
-              <Link href="/orders" className="hover:underline">
+              <Link
+                href="/orders"
+                className="transition-colors hover:text-foreground"
+              >
                 Pedidos
               </Link>
             </nav>
           </div>
-          <div className="flex items-center gap-3 text-sm">
-            <span className="text-muted-foreground">
-              {membership.organizationName}{" "}
-              <span className="text-xs uppercase tracking-wide">
-                ({kindLabel})
+          <div className="flex items-center gap-4 text-[13px]">
+            <span className="hidden text-[var(--piantare-muted)] sm:inline">
+              {membership.organizationName}
+              <span className="ml-2 inline-block rounded-full border border-[var(--piantare-gx)] bg-[var(--piantare-gl)] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--piantare-gd)]">
+                {kindLabel}
               </span>
             </span>
             {memberships.length > 1 && (
-              <span className="text-xs text-muted-foreground">
+              <span className="hidden text-[11px] font-light text-[var(--piantare-dim)] md:inline">
                 · {memberships.length} orgs
               </span>
             )}
@@ -72,7 +86,7 @@ export function Shell({ membership, memberships, children }: ShellProps) {
           </div>
         </div>
       </header>
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-8">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-12">
         {children}
       </div>
     </div>

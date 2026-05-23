@@ -14,35 +14,53 @@ export default async function IndustriaProductsPage() {
 
   return (
     <Shell membership={membership} memberships={memberships}>
-      <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Produtos</h1>
-        <Button asChild>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+            Produtos
+          </h1>
+          <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+            O que sua indústria oferece para o catálogo dos brands.
+          </p>
+        </div>
+        <Button asChild size="default">
           <Link href="/industria/products/new">Novo produto</Link>
         </Button>
       </header>
 
       {products.length === 0 ? (
         <Card>
-          <CardContent className="p-6 text-sm text-muted-foreground">
-            Nenhum produto ainda. Crie o primeiro para aparecer no catálogo dos
-            brands.
+          <CardContent className="flex flex-col gap-2 p-10 text-center">
+            <p className="font-serif text-2xl font-light text-foreground">
+              Nenhum produto ainda.
+            </p>
+            <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+              Crie o primeiro para aparecer no catálogo dos brands.
+            </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           {products.map((p) => (
             <Card key={p.id}>
               <CardHeader>
-                <CardTitle className="text-base">{p.name}</CardTitle>
+                <CardTitle className="text-[22px]">{p.name}</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-1 text-sm">
-                <p className="text-muted-foreground">{p.description}</p>
-                <p className="font-mono">
-                  US$ {p.priceUsd.toFixed(2)} / {p.unit}
+              <CardContent className="flex flex-col gap-3 text-[14px] font-light">
+                {p.description && (
+                  <p className="text-[var(--piantare-muted)]">
+                    {p.description}
+                  </p>
+                )}
+                <p className="tabular-nums text-foreground">
+                  <span className="font-normal">
+                    US$ {p.priceUsd.toFixed(2)}
+                  </span>
+                  <span className="text-[var(--piantare-muted)]"> / {p.unit}</span>
                 </p>
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                  {p.isActive ? "ativo" : "inativo"}
-                </p>
+                <span className="inline-flex w-fit items-center rounded-full border border-[var(--piantare-gx)] bg-[var(--piantare-gl)] px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--piantare-gd)]">
+                  {p.isActive ? "Ativo" : "Inativo"}
+                </span>
               </CardContent>
             </Card>
           ))}

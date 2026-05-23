@@ -75,41 +75,63 @@ export default async function OnboardingPage({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-1 flex-col gap-6 p-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Criar sua organização</CardTitle>
-          <CardDescription>
-            Você precisa de uma indústria (quem produz) ou um brand (quem
-            encomenda) para usar a plataforma. Pode trocar depois.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
+    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center gap-10 px-6 py-16">
+      <header className="flex flex-col items-center gap-3 text-center">
+        <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+          Vamos abrir sua organização
+        </h1>
+        <p className="text-[14px] font-light leading-relaxed text-[var(--piantare-muted)]">
+          A Piantare coordena indústrias e brands na cadeia da longevidade.
+          Comece escolhendo qual lado você representa — pode trocar depois.
+        </p>
+      </header>
+      <Card className="w-full">
+        <CardContent className="flex flex-col gap-6 p-7">
           {sp.error && (
-            <p className="text-sm text-destructive">{sp.error}</p>
+            <p className="text-[13px] text-destructive">{sp.error}</p>
           )}
-          <form action={createOrgAction} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
+          <form action={createOrgAction} className="flex flex-col gap-5">
+            <div className="flex flex-col gap-3">
               <Label>Tipo de organização</Label>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-3">
+                <label className="group cursor-pointer">
                   <input
                     type="radio"
                     name="kind"
                     value="industria"
                     defaultChecked
+                    className="peer sr-only"
                   />
-                  Indústria (produção)
+                  <div className="flex h-full flex-col gap-1 rounded-xl border border-[var(--piantare-border)] bg-[var(--piantare-warm)] px-4 py-4 transition-all duration-200 ease-out peer-checked:border-[var(--piantare-gm)] peer-checked:bg-[var(--piantare-gl)] peer-checked:shadow-[var(--piantare-shadow-focus)] group-hover:-translate-y-[1px]">
+                    <span className="text-[15px] font-normal text-foreground">
+                      Indústria
+                    </span>
+                    <span className="text-[12px] font-light text-[var(--piantare-muted)]">
+                      Quem produz
+                    </span>
+                  </div>
                 </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="radio" name="kind" value="brand" />
-                  Brand (compra)
+                <label className="group cursor-pointer">
+                  <input
+                    type="radio"
+                    name="kind"
+                    value="brand"
+                    className="peer sr-only"
+                  />
+                  <div className="flex h-full flex-col gap-1 rounded-xl border border-[var(--piantare-border)] bg-[var(--piantare-warm)] px-4 py-4 transition-all duration-200 ease-out peer-checked:border-[var(--piantare-gm)] peer-checked:bg-[var(--piantare-gl)] peer-checked:shadow-[var(--piantare-shadow-focus)] group-hover:-translate-y-[1px]">
+                    <span className="text-[15px] font-normal text-foreground">
+                      Brand
+                    </span>
+                    <span className="text-[12px] font-light text-[var(--piantare-muted)]">
+                      Quem encomenda
+                    </span>
+                  </div>
                 </label>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Nome</Label>
+              <Label htmlFor="name">Nome da organização</Label>
               <Input id="name" name="name" required />
             </div>
 
@@ -132,7 +154,9 @@ export default async function OnboardingPage({
             */}
             <input type="hidden" name="currency" value="USD" />
 
-            <SubmitButton pendingLabel="Criando organização…">Criar organização</SubmitButton>
+            <SubmitButton pendingLabel="Criando organização…" className="mt-3 w-full">
+              Criar organização
+            </SubmitButton>
           </form>
         </CardContent>
       </Card>

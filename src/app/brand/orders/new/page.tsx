@@ -65,21 +65,28 @@ export default async function NewOrderPage({
 
   return (
     <Shell membership={membership} memberships={memberships}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Novo pedido</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {sp.error && (
-            <p className="mb-4 text-sm text-destructive">{sp.error}</p>
-          )}
-          <OrderForm
-            catalog={options}
-            defaultProductId={defaultProductId}
-            action={createOrderAction}
-          />
-        </CardContent>
-      </Card>
+      <div className="mx-auto w-full max-w-2xl">
+        <header className="mb-8 flex flex-col gap-2">
+          <h1 className="font-serif text-[36px] font-light leading-none tracking-tight">
+            Novo pedido
+          </h1>
+          <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+            Escolha o produto e a quantidade. O total atualiza ao vivo.
+          </p>
+        </header>
+        <Card>
+          <CardContent className="p-7">
+            {sp.error && (
+              <p className="mb-5 text-[13px] text-destructive">{sp.error}</p>
+            )}
+            <OrderForm
+              catalog={options}
+              defaultProductId={defaultProductId}
+              action={createOrderAction}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </Shell>
   );
 }

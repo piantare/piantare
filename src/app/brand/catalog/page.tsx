@@ -14,35 +14,49 @@ export default async function BrandCatalogPage() {
 
   return (
     <Shell membership={membership} memberships={memberships}>
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Catálogo</h1>
-        <p className="text-sm text-muted-foreground">
+      <header className="flex flex-col gap-2">
+        <h1 className="font-serif text-[40px] font-light leading-none tracking-tight">
+          Catálogo
+        </h1>
+        <p className="text-[14px] font-light text-[var(--piantare-muted)]">
           Produtos ativos oferecidos pelas indústrias parceiras.
         </p>
       </header>
 
       {products.length === 0 ? (
         <Card>
-          <CardContent className="p-6 text-sm text-muted-foreground">
-            Ainda não há produtos disponíveis no catálogo.
+          <CardContent className="flex flex-col gap-2 p-10 text-center">
+            <p className="font-serif text-2xl font-light text-foreground">
+              Ainda nenhum produto disponível.
+            </p>
+            <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+              Quando uma indústria publicar, aparece aqui.
+            </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           {products.map((p) => (
             <Card key={p.id}>
               <CardHeader>
-                <CardTitle className="text-base">{p.name}</CardTitle>
-                <p className="text-xs text-muted-foreground">
-                  Indústria: {p.labName}
+                <CardTitle className="text-[22px]">{p.name}</CardTitle>
+                <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--piantare-muted)]">
+                  {p.labName}
                 </p>
               </CardHeader>
-              <CardContent className="flex flex-col gap-2 text-sm">
-                <p className="text-muted-foreground">{p.description}</p>
-                <p className="font-mono">
-                  US$ {p.priceUsd.toFixed(2)} / {p.unit}
+              <CardContent className="flex flex-col gap-4 text-[14px] font-light">
+                {p.description && (
+                  <p className="text-[var(--piantare-muted)]">
+                    {p.description}
+                  </p>
+                )}
+                <p className="tabular-nums text-foreground">
+                  <span className="font-normal">
+                    US$ {p.priceUsd.toFixed(2)}
+                  </span>
+                  <span className="text-[var(--piantare-muted)]"> / {p.unit}</span>
                 </p>
-                <Button asChild size="sm">
+                <Button asChild size="sm" className="mt-1 w-fit">
                   <Link href={`/brand/orders/new?productId=${p.id}`}>
                     Criar pedido
                   </Link>

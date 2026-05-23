@@ -52,49 +52,58 @@ export default async function NewProductPage({
 
   return (
     <Shell membership={membership} memberships={memberships}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Novo produto</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {sp.error && (
-            <p className="mb-4 text-sm text-destructive">{sp.error}</p>
-          )}
-          <form action={createProductAction} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="name">Nome</Label>
-              <Input id="name" name="name" required />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="description">Descrição</Label>
-              <Input id="description" name="description" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+      <div className="mx-auto w-full max-w-2xl">
+        <header className="mb-8 flex flex-col gap-2">
+          <h1 className="font-serif text-[36px] font-light leading-none tracking-tight">
+            Novo produto
+          </h1>
+          <p className="text-[14px] font-light text-[var(--piantare-muted)]">
+            O que sua indústria oferece para os brands.
+          </p>
+        </header>
+        <Card>
+          <CardContent className="p-7">
+            {sp.error && (
+              <p className="mb-5 text-[13px] text-destructive">{sp.error}</p>
+            )}
+            <form action={createProductAction} className="flex flex-col gap-5">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="unit">Unidade</Label>
-                <Input
-                  id="unit"
-                  name="unit"
-                  placeholder="ex.: kg, frasco, dose"
-                  required
-                />
+                <Label htmlFor="name">Nome</Label>
+                <Input id="name" name="name" required />
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="priceUsd">Preço (USD)</Label>
-                <Input
-                  id="priceUsd"
-                  name="priceUsd"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  required
-                />
+                <Label htmlFor="description">Descrição</Label>
+                <Input id="description" name="description" />
               </div>
-            </div>
-            <SubmitButton pendingLabel="Criando produto…">Criar produto</SubmitButton>
-          </form>
-        </CardContent>
-      </Card>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="unit">Unidade</Label>
+                  <Input
+                    id="unit"
+                    name="unit"
+                    placeholder="ex.: kg, frasco, dose"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="priceUsd">Preço (USD)</Label>
+                  <Input
+                    id="priceUsd"
+                    name="priceUsd"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+              <SubmitButton pendingLabel="Criando produto…" className="mt-3 w-full">
+                Criar produto
+              </SubmitButton>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </Shell>
   );
 }
