@@ -228,6 +228,57 @@ export type Database = {
           },
         ]
       }
+      catalog_listings: {
+        Row: {
+          created_at: string
+          currency: string
+          id: string
+          min_order_qty: number
+          partnership_id: string
+          product_id: string
+          status: Database["public"]["Enums"]["listing_status"]
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency: string
+          id?: string
+          min_order_qty?: number
+          partnership_id: string
+          product_id: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          unit_price: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          id?: string
+          min_order_qty?: number
+          partnership_id?: string
+          product_id?: string
+          status?: Database["public"]["Enums"]["listing_status"]
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "catalog_listings_partnership_id_fkey"
+            columns: ["partnership_id"]
+            isOneToOne: false
+            referencedRelation: "partnerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "catalog_listings_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comunidade_likes: {
         Row: {
           post_id: string
@@ -929,6 +980,70 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partnerships: {
+        Row: {
+          accepted_at: string | null
+          buyer_org_id: string
+          created_at: string
+          id: string
+          proposed_by_membership_id: string | null
+          seller_org_id: string
+          status: Database["public"]["Enums"]["partnership_status"]
+          supply_model: Database["public"]["Enums"]["supply_model"]
+          terminated_at: string | null
+          terms: Json
+          updated_at: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          buyer_org_id: string
+          created_at?: string
+          id?: string
+          proposed_by_membership_id?: string | null
+          seller_org_id: string
+          status?: Database["public"]["Enums"]["partnership_status"]
+          supply_model?: Database["public"]["Enums"]["supply_model"]
+          terminated_at?: string | null
+          terms?: Json
+          updated_at?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          buyer_org_id?: string
+          created_at?: string
+          id?: string
+          proposed_by_membership_id?: string | null
+          seller_org_id?: string
+          status?: Database["public"]["Enums"]["partnership_status"]
+          supply_model?: Database["public"]["Enums"]["supply_model"]
+          terminated_at?: string | null
+          terms?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partnerships_buyer_org_id_fkey"
+            columns: ["buyer_org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partnerships_proposed_by_membership_id_fkey"
+            columns: ["proposed_by_membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partnerships_seller_org_id_fkey"
+            columns: ["seller_org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -1910,6 +2025,7 @@ export type Database = {
         | "cliente"
         | "admin"
       invoice_status: "pending" | "paid"
+      listing_status: "active" | "paused" | "discontinued"
       membership_role: "owner" | "member" | "agente"
       order_stage:
         | "rascunho"
@@ -1928,6 +2044,8 @@ export type Database = {
         | "ready"
         | "shipped"
       organization_kind: "industria" | "brand" | "escritorio"
+      partnership_status: "pending" | "active" | "terminated"
+      supply_model: "purchase" | "consignment" | "dropship"
       vertical_kind: "cannabis_medicinal"
     }
     CompositeTypes: {
@@ -2074,6 +2192,7 @@ export const Constants = {
         "admin",
       ],
       invoice_status: ["pending", "paid"],
+      listing_status: ["active", "paused", "discontinued"],
       membership_role: ["owner", "member", "agente"],
       order_stage: [
         "rascunho",
@@ -2094,6 +2213,8 @@ export const Constants = {
         "shipped",
       ],
       organization_kind: ["industria", "brand", "escritorio"],
+      partnership_status: ["pending", "active", "terminated"],
+      supply_model: ["purchase", "consignment", "dropship"],
       vertical_kind: ["cannabis_medicinal"],
     },
   },
