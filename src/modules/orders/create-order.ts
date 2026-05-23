@@ -92,7 +92,11 @@ export function rowToOrder(row: {
   id: string;
   vertical?: VerticalKind | null;
   stage?: OrderStage | null;
-  brand_id: string;
+  /**
+   * brand_id agora é nullable (ADR 0007 §6 Sprint 1A C4a). NULL para
+   * cotações agente→paciente; preenchido para pedidos brand→industria.
+   */
+  brand_id: string | null;
   lab_id: string;
   product_id: string;
   quantity: number;
@@ -112,7 +116,8 @@ export function rowToOrder(row: {
     // Stage convive com status (ADR 0007 §6 Wave B). Optional aqui só
     // para callers cuja SELECT predates a coluna; default no DB existe.
     stage: row.stage ?? undefined,
-    brandId: row.brand_id as OrganizationId,
+    // brandId nullable — cotação agente→paciente não tem brand.
+    brandId: (row.brand_id ?? null) as OrganizationId | null,
     labId: row.lab_id as OrganizationId,
     productId: row.product_id as ProductId,
     quantity: Number(row.quantity),

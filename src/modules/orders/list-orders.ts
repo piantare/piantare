@@ -48,16 +48,20 @@ export async function listOrdersForOrg(
   const rows = data ?? [];
 
   // Resolve all referenced org names in one round trip.
+  // brand_id pode ser null (cotação agente→paciente, ADR 0007 §6).
   const orgIds: string[] = [];
   for (const row of rows) {
-    orgIds.push(row.brand_id, row.lab_id);
+    orgIds.push(row.lab_id);
+    if (row.brand_id) orgIds.push(row.brand_id);
   }
   const orgNames = await getOrgNamesByIds(orgIds);
 
   return rows.map((row) => ({
     ...rowToOrder(row),
     productName: row.products?.name ?? "",
-    brandName: orgNames.get(row.brand_id as OrganizationId) ?? "",
+    brandName: row.brand_id
+      ? (orgNames.get(row.brand_id as OrganizationId) ?? "")
+      : "",
     labName: orgNames.get(row.lab_id as OrganizationId) ?? "",
   }));
 }

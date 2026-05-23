@@ -39,13 +39,17 @@ export async function getOrderById(id: OrderId): Promise<OrderDetail> {
   if (error) throw new Error(`getOrderById: ${error.message}`);
   if (!data) throw new OrderNotFoundError();
 
-  const orgNames = await getOrgNamesByIds([data.brand_id, data.lab_id]);
+  // brand_id pode ser null (cotação agente→paciente, ADR 0007 §6 Sprint 1A C4a).
+  const orgIds = [data.lab_id, ...(data.brand_id ? [data.brand_id] : [])];
+  const orgNames = await getOrgNamesByIds(orgIds);
 
   return {
     ...rowToOrder(data),
     productName: data.products?.name ?? "",
     productUnit: data.products?.unit ?? "",
-    brandName: orgNames.get(data.brand_id as OrganizationId) ?? "",
+    brandName: data.brand_id
+      ? (orgNames.get(data.brand_id as OrganizationId) ?? "")
+      : "",
     labName: orgNames.get(data.lab_id as OrganizationId) ?? "",
   };
 }

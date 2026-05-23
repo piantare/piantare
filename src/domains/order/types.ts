@@ -76,7 +76,12 @@ export type InvoiceStatus = (typeof INVOICE_STATUSES)[number];
 export type Order = {
   id: OrderId;
   vertical: VerticalKind;
-  brandId: OrganizationId;
+  /**
+   * brandId nullable a partir do Sprint 1A C4a — cotação agente→paciente
+   * não tem brand comprador (o "buyer" é uma `person`). Pedidos legacy
+   * brand→industria mantêm preenchido.
+   */
+  brandId: OrganizationId | null;
   labId: OrganizationId;
   productId: ProductId;
   quantity: number;

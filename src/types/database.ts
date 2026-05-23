@@ -828,7 +828,7 @@ export type Database = {
       }
       orders: {
         Row: {
-          brand_id: string
+          brand_id: string | null
           created_at: string
           created_by: string
           for_person_id: string | null
@@ -846,7 +846,7 @@ export type Database = {
           vertical: Database["public"]["Enums"]["vertical_kind"]
         }
         Insert: {
-          brand_id: string
+          brand_id?: string | null
           created_at?: string
           created_by: string
           for_person_id?: string | null
@@ -864,7 +864,7 @@ export type Database = {
           vertical?: Database["public"]["Enums"]["vertical_kind"]
         }
         Update: {
-          brand_id?: string
+          brand_id?: string | null
           created_at?: string
           created_by?: string
           for_person_id?: string | null
