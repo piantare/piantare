@@ -32,7 +32,15 @@ export function isOrganizationKind(value: unknown): value is OrganizationKind {
   );
 }
 
-export const MEMBERSHIP_ROLES = ["owner", "member"] as const;
+/**
+ * Membership roles (ADR 0007 §3): pessoa dentro de uma org.
+ * - `owner` / `member`: roles operacionais clássicos.
+ * - `agente` (Wave B): pessoa que origina cotações e mantém carteira
+ *   de clientes. Pode coexistir com owner/member em outra org.
+ * Outros papéis (`operator`, `financeiro`, `visualizador`) entram quando
+ * o fluxo que os consome estiver sendo construído (princípio A3).
+ */
+export const MEMBERSHIP_ROLES = ["owner", "member", "agente"] as const;
 export type MembershipRole = (typeof MEMBERSHIP_ROLES)[number];
 
 export const ORG_CURRENCIES = ["USD", "BRL"] as const;

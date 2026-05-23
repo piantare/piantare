@@ -37,6 +37,31 @@ export function isOrderStatus(value: unknown): value is OrderStatus {
   );
 }
 
+/**
+ * Order stages (ADR 0007 §6 Wave B). Convive com `OrderStatus` durante
+ * a transição: status segue como verdade da UI atual da indústria;
+ * stage abre espaço para o fluxo completo agente → cotação → … →
+ * liquidação. Conversão e UI nova entram em commits incrementais.
+ */
+export const ORDER_STAGES = [
+  "rascunho",
+  "cotacao_aberta",
+  "documentacao",
+  "pagamento",
+  "producao_ou_importacao",
+  "logistica",
+  "entregue",
+  "liquidado",
+  "cancelado",
+] as const;
+export type OrderStage = (typeof ORDER_STAGES)[number];
+export function isOrderStage(value: unknown): value is OrderStage {
+  return (
+    typeof value === "string" &&
+    (ORDER_STAGES as readonly string[]).includes(value)
+  );
+}
+
 export const INVOICE_STATUSES = ["pending", "paid"] as const;
 export type InvoiceStatus = (typeof INVOICE_STATUSES)[number];
 
@@ -58,6 +83,13 @@ export type Order = {
   unitPriceUsd: number;
   totalUsd: number;
   status: OrderStatus;
+  /**
+   * Stage do modelo expandido (ADR 0007 §6). Convive com `status`
+   * durante a transição. Sempre presente após Wave B (backfill +
+   * default no DB). Optional no tipo apenas para callers cuja SELECT
+   * predates a coluna.
+   */
+  stage?: OrderStage;
   paymentTerms: string;
   createdBy: string;
   createdAt: string;

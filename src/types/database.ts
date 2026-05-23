@@ -780,11 +780,14 @@ export type Database = {
           brand_id: string
           created_at: string
           created_by: string
+          for_person_id: string | null
           id: string
           lab_id: string
+          originating_agent_membership_id: string | null
           payment_terms: string
           product_id: string
           quantity: number
+          stage: Database["public"]["Enums"]["order_stage"]
           status: Database["public"]["Enums"]["order_status"]
           total_usd: number
           unit_price_usd: number
@@ -795,11 +798,14 @@ export type Database = {
           brand_id: string
           created_at?: string
           created_by: string
+          for_person_id?: string | null
           id?: string
           lab_id: string
+          originating_agent_membership_id?: string | null
           payment_terms?: string
           product_id: string
           quantity: number
+          stage?: Database["public"]["Enums"]["order_stage"]
           status?: Database["public"]["Enums"]["order_status"]
           total_usd?: number
           unit_price_usd: number
@@ -810,11 +816,14 @@ export type Database = {
           brand_id?: string
           created_at?: string
           created_by?: string
+          for_person_id?: string | null
           id?: string
           lab_id?: string
+          originating_agent_membership_id?: string | null
           payment_terms?: string
           product_id?: string
           quantity?: number
+          stage?: Database["public"]["Enums"]["order_stage"]
           status?: Database["public"]["Enums"]["order_status"]
           total_usd?: number
           unit_price_usd?: number
@@ -844,10 +853,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "orders_for_person_id_fkey"
+            columns: ["for_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "orders_lab_id_fkey"
             columns: ["lab_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_originating_agent_membership_id_fkey"
+            columns: ["originating_agent_membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
             referencedColumns: ["id"]
           },
           {
@@ -906,6 +929,44 @@ export type Database = {
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      people: {
+        Row: {
+          created_at: string
+          created_by_membership_id: string
+          id: string
+          name: string
+          primary_contact: string
+          updated_at: string
+          vertical: Database["public"]["Enums"]["vertical_kind"]
+        }
+        Insert: {
+          created_at?: string
+          created_by_membership_id: string
+          id?: string
+          name: string
+          primary_contact: string
+          updated_at?: string
+          vertical?: Database["public"]["Enums"]["vertical_kind"]
+        }
+        Update: {
+          created_at?: string
+          created_by_membership_id?: string
+          id?: string
+          name?: string
+          primary_contact?: string
+          updated_at?: string
+          vertical?: Database["public"]["Enums"]["vertical_kind"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_created_by_membership_id_fkey"
+            columns: ["created_by_membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
             referencedColumns: ["id"]
           },
         ]
@@ -1849,7 +1910,17 @@ export type Database = {
         | "cliente"
         | "admin"
       invoice_status: "pending" | "paid"
-      membership_role: "owner" | "member"
+      membership_role: "owner" | "member" | "agente"
+      order_stage:
+        | "rascunho"
+        | "cotacao_aberta"
+        | "documentacao"
+        | "pagamento"
+        | "producao_ou_importacao"
+        | "logistica"
+        | "entregue"
+        | "liquidado"
+        | "cancelado"
       order_status:
         | "created"
         | "approved"
@@ -2003,7 +2074,18 @@ export const Constants = {
         "admin",
       ],
       invoice_status: ["pending", "paid"],
-      membership_role: ["owner", "member"],
+      membership_role: ["owner", "member", "agente"],
+      order_stage: [
+        "rascunho",
+        "cotacao_aberta",
+        "documentacao",
+        "pagamento",
+        "producao_ou_importacao",
+        "logistica",
+        "entregue",
+        "liquidado",
+        "cancelado",
+      ],
       order_status: [
         "created",
         "approved",

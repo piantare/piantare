@@ -10,6 +10,7 @@ import { InactiveProductError, type ProductId } from "@/domains/product";
 import {
   toOrderId,
   type Order,
+  type OrderStage,
   type OrderStatus,
 } from "@/domains/order";
 
@@ -90,6 +91,7 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
 export function rowToOrder(row: {
   id: string;
   vertical?: VerticalKind | null;
+  stage?: OrderStage | null;
   brand_id: string;
   lab_id: string;
   product_id: string;
@@ -107,6 +109,9 @@ export function rowToOrder(row: {
     // Vertical defaults to cannabis_medicinal at the DB level (ADR 0007 Wave A).
     // We accept null only for callers whose SELECT predates the column.
     vertical: row.vertical ?? "cannabis_medicinal",
+    // Stage convive com status (ADR 0007 §6 Wave B). Optional aqui só
+    // para callers cuja SELECT predates a coluna; default no DB existe.
+    stage: row.stage ?? undefined,
     brandId: row.brand_id as OrganizationId,
     labId: row.lab_id as OrganizationId,
     productId: row.product_id as ProductId,
